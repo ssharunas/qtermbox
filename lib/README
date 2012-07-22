@@ -1,0 +1,6 @@
+Place for termbox library.
+There should be:
+  * termbox.h - header file for termbox
+  * libtermbox.a - staticaly complied termbox library (used for tests, you may use your own compiled library in your projects).
+
+libtermbox.a is not included by default, you should compile it yourself (https://github.com/nsf/termbox)

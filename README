@@ -1,0 +1,19 @@
+
+This is a wrapper for termbox library package, that is is created by nsf (https://github.com/nsf/termbox).
+
+To build this wrapper you need original termbox library compilled and placed in lib folder.
+To compile wrapper:
+    cd path/to/qtermbox
+    mkdir bin/qtermbox
+    cd bin/termbox
+    qmake ../../src/
+    make
+    make install
+
+To compile and run unit tests:
+    cd path/to/qtermbox
+    mkdir bin/qtermbox-tests
+    cd bin/termbox
+    qmake ../../test/UnitTests/
+    make
+    ./tst_unitteststest

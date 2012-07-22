@@ -1,0 +1,6 @@
+.directory
+*.pro.user
+*~
+doc/html
+bin/*
+lib/libtermbox.a

@@ -1,0 +1,12 @@
+#ifndef QTERMBOX_GLOBAL_H
+#define QTERMBOX_GLOBAL_H
+
+#include <QtCore/qglobal.h>
+
+#if defined(QTERMBOX_LIBRARY)
+#define QTERMBOXSHARED_EXPORT Q_DECL_EXPORT
+#else
+#define QTERMBOXSHARED_EXPORT Q_DECL_IMPORT
+#endif
+
+#endif // QTERMBOX_GLOBAL_H
