@@ -19,6 +19,7 @@ namespace QTermboxCore
 
 	void initialize();
 	void shutdown();
+	bool wasInitialized();
 
 	void clearScreen();
 	void present();
@@ -39,6 +40,7 @@ namespace QTermboxCore
 	void putCell(unsigned int x, unsigned int y, QString str, QTermboxStyle fg, QTermboxStyle bg);
 	void putCell(unsigned int x, unsigned int y, int w, QString str);
 	void putCell(unsigned int x, unsigned int y, int w, QString str, QTermboxStyle fg, QTermboxStyle bg);
+	void putCell(unsigned int x, unsigned int y, int w, int h, QString str, QTermboxStyle fg, QTermboxStyle bg);
 }
 
 #endif // QTERMBOXCORE_H

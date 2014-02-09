@@ -4,15 +4,26 @@
 #include "private/qtermboxcoreprivate.h"
 #include "private/qtermboxcellcontainerprivate.h"
 #include "qtermboxeventpool.h"
+#include <QFile>
+#include <QTextStream>
+#include <QDebug>
 
 namespace QTermboxCore
 {
 /// \cond PRIVATE
 QTermboxStyle clearFg(QTermbox::White);
 QTermboxStyle clearBg(QTermbox::Black);
-QtMsgHandler defaultHandler(0);
 
+
+QFile log("~/termbox-log");
+
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
+QtMsgHandler defaultHandler(0);
 void termboxMessageOutput(QtMsgType type, const char *msg)
+#else
+QtMessageHandler defaultHandler(0);
+void termboxMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+#endif
 {
 	if(type == QtFatalMsg)
 	{
@@ -20,8 +31,38 @@ void termboxMessageOutput(QtMsgType type, const char *msg)
 		shutdown();
 	}
 
+	if(!log.isOpen()){
+		log.open(QIODevice::WriteOnly | QIODevice::Text);
+	}
+
+	if(log.isOpen()){
+		QTextStream out(&log);
+		switch(type){
+			case QtDebugMsg:
+				out << "DEBUG: ";
+				break;
+			case QtWarningMsg:
+				out << "WARNING: ";
+				break;
+
+			case QtFatalMsg:
+				out << "FATAL: ";
+				break;
+			case QtSystemMsg:
+				out << "SYSTEM: ";
+				break;
+		}
+
+		out << msg;
+		out << "\n";
+	}
+
 	if(defaultHandler)
+#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 		defaultHandler(type, msg);
+#else
+		defaultHandler(type, context, msg);
+#endif
 }
 
 /// \endcond
@@ -63,9 +104,21 @@ void initialize(){
 		}
 	}
 	else{
+		#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 		defaultHandler = qInstallMsgHandler(termboxMessageOutput);
+		#else
+		defaultHandler = qInstallMessageHandler(termboxMessageOutput);
+		#endif
 		QTermboxCorePrivate::setWasInitialized(true);
 	}
+}
+
+/*!
+	\brief Checks if termbox library was initialized.
+	Returns true if library is initialized an not shut down yet.
+	*/
+bool wasInitialized(){
+	return QTermboxCorePrivate::wasInitialized();
 }
 
 /*!
@@ -80,7 +133,12 @@ void shutdown(){
 		if(!QTermboxEventPool::instance()->isStopped())
 			QTermboxEventPool::instance()->stop();
 
+		#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 		qInstallMsgHandler(defaultHandler);
+		#else
+		qInstallMessageHandler(termboxMessageOutput);
+		#endif
+
 		defaultHandler = 0;
 
 		tb_shutdown();
@@ -279,25 +337,69 @@ void putCell(unsigned int x, unsigned int y, QString str){
 }
 
 /*!
+	This function is overload of putCell(unsigned int x, unsigned int y, int w, int h, QString str, QTermboxStyle fg, QTermboxStyle bg)
+	with height = -1;
+	*/
+void putCell(unsigned int x, unsigned int y, int w, QString str, QTermboxStyle fg, QTermboxStyle bg){
+	return putCell(x, y, w, -1, str, fg, bg);
+}
+
+/*!
 	\brief Prints string with foreground and background styles.
 	String is wrapped up to \a width. If width is -1, no wrapping is done.
+	If string is shorter than width remaining space is filled with spaces.
+	No more than \a height lines are printed. Height is ignored if it is less than 0.
 
 	\param x - position from left side of the screen.
 	\param y - position from top of the screen.
 	\param w - width of string.
+	\param h - height of string.
 	\param str - string to print.
 	\param fg - foreground style.
 	\param bg - background style.
 	*/
-void putCell(unsigned int x, unsigned int y, int w, QString str, QTermboxStyle fg, QTermboxStyle bg){
+void putCell(unsigned int x, unsigned int y, int w, int h, QString str, QTermboxStyle fg, QTermboxStyle bg){
 	Q_ASSERT_X(QTermboxCorePrivate::wasInitialized(), "putCell", "Termbox was not initialized.");
 
-	for(int i = 0; i < str.length(); i++){
-		tb_change_cell(x + i, y, str[i].unicode(), fg.style(), bg.style());
+	int remainingWidth = str.length();
+
+	if(w <= 0)
+		w = str.length();
+
+	int line = 0;
+
+	//fill text
+	while(remainingWidth > 0){
+
+		for(int i = 0; i < qMin(remainingWidth, w); i++){
+			tb_change_cell(x + i, y + line, str[line * w + i].unicode(), fg.style(), bg.style());
+		}
+
+		remainingWidth -= w;
+
+		if(remainingWidth > 0)
+			line++;
+
+		if(h > 0 && line >= h)
+			return;
 	}
 
-	for(int i = w; i > str.length(); i--){
-		tb_change_cell(x + i, y, ' ', fg.style(), bg.style());
+	//fill remaining unfinished empty line
+	for(int i = x + w - 1; remainingWidth < 0; remainingWidth++, i--){
+		tb_change_cell(i, y + line, ' ', fg.style(), bg.style());
+	}
+
+	//fill empty height
+	if(h > 0){
+		line++;
+		while(line < h){
+
+			for(unsigned int i = x + w - 1; i >= x; i--){
+				tb_change_cell(i, y + line, ' ', fg.style(), bg.style());
+			}
+
+			line++;
+		}
 	}
 }
 
