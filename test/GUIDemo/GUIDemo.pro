@@ -16,7 +16,7 @@ TEMPLATE = app
 
 SOURCES += main.cpp
 
-LIBS += -L$$PWD/../../bin/Qt_4_8_2_Release/ -lQTermbox
+LIBS += -L$$PWD/../../bin/build-qtermbox-Desktop-Debug/ -lQTermbox
 LIBS += -L$$PWD/../../lib/ -ltermbox
 
 INCLUDEPATH += $$PWD/../../src

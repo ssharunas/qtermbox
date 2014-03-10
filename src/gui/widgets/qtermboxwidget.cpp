@@ -14,24 +14,6 @@ void QTermboxWidget::setGeometry(QRect geometry)
 	update();
 }
 
-void QTermboxWidget::setDefaultThemeValues(QTermboxTheme *theme)
-{
-	Q_UNUSED(theme);
-}
-
-const QTermboxTheme &QTermboxWidget::getActiveTheme()
-{
-	QTermboxTheme* result = theme();
-
-	if(!result)
-		result = defaultTheme();
-
-	if(!result)
-		qFatal("Failed to get theme and default theme. Default theme must never be null.");
-
-	return *result;
-}
-
 bool QTermboxWidget::hasFocus()
 {
 	return QTermboxFocusManager::instance()->isFocused(this);

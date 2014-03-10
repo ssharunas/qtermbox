@@ -5,6 +5,7 @@
 #include "private/qtermboxcellcontainerprivate.h"
 #include "qtermboxeventpool.h"
 #include <QFile>
+#include <QDir>
 #include <QTextStream>
 #include <QDebug>
 
@@ -15,14 +16,14 @@ QTermboxStyle clearFg(QTermbox::White);
 QTermboxStyle clearBg(QTermbox::Black);
 
 
-QFile log("~/termbox-log");
+QFile log(QDir::homePath() + "/termbox-log");
 
 #if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
 QtMsgHandler defaultHandler(0);
 void termboxMessageOutput(QtMsgType type, const char *msg)
 #else
 QtMessageHandler defaultHandler(0);
-void termboxMessageOutput(QtMsgType type, const QMessageLogContext &context, const QString &msg)
+void termboxMessageOutput(QtMsgType type, const QMessageLogContext &, const QString &msg)
 #endif
 {
 	if(type == QtFatalMsg)
@@ -56,13 +57,6 @@ void termboxMessageOutput(QtMsgType type, const QMessageLogContext &context, con
 		out << msg;
 		out << "\n";
 	}
-
-	if(defaultHandler)
-#if QT_VERSION < QT_VERSION_CHECK(5, 0, 0)
-		defaultHandler(type, msg);
-#else
-		defaultHandler(type, context, msg);
-#endif
 }
 
 /// \endcond
@@ -82,7 +76,6 @@ QSize screenSize(){
 	finalized using 'Close' function.
 	*/
 void initialize(){
-
 	int errorCode = tb_init();
 	if(errorCode){
 		switch(errorCode){

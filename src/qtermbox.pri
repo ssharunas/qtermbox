@@ -12,12 +12,12 @@ SOURCES += core/qtermboxeventpool.cpp \
 	gui/qtermboxscreen.cpp \
 	gui/qtermboxfocusmanager.cpp \
 	gui/layout/qtermboxlayout.cpp \
-	gui/themes/qtermboxtheme.cpp \
-	gui/themes/qtermboxthemedefaultvaluesprovider.cpp \
 	gui/widgets/qtermboxwidget.cpp \
 	gui/widgets/qtermboxlabel.cpp \
     gui/widgets/qtermboxlineedit.cpp \
-    gui/qtermboxfocusevent.cpp
+    gui/qtermboxfocusevent.cpp \
+    gui/themes/qtermboxwidgetstyle.cpp \
+    gui/themes/qtermboxstylefactory.cpp
 
 HEADERS += global.h \
 	qtermbox.h \
@@ -37,9 +37,9 @@ HEADERS += global.h \
 	gui/qtermboxscreen.h \
 	gui/qtermboxfocusmanager.h \
 	gui/layout/qtermboxlayout.h \
-	gui/themes/qtermboxtheme.h \
-	gui/themes/qtermboxthemedefaultvaluesprovider.h \
 	gui/widgets/qtermboxwidget.h \
 	gui/widgets/qtermboxlabel.h \
     gui/widgets/qtermboxlineedit.h \
-    gui/qtermboxfocusevent.h
+    gui/qtermboxfocusevent.h \
+    gui/themes/qtermboxwidgetstyle.h \
+    gui/themes/qtermboxstylefactory.h

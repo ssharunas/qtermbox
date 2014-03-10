@@ -40,12 +40,9 @@ void QTermboxScreen::onKeyEvent(QTermboxKeyEvent event)
 	if(!QTermboxCore::wasInitialized())
 		return;
 
-//	qDebug() << event.key() << event.text();
-
 	QTermboxWidget *widget = QTermboxFocusManager::instance()->focused();
 
 	while(widget){
-		qDebug("1");
 		if(!event.isAccepted()){
 			widget->onKeyEvent(event);
 		}
@@ -67,6 +64,7 @@ void QTermboxScreen::onKeyEventAlternative(QTermboxKeyEvent event)
 	QTermboxWidget *widget = QTermboxFocusManager::instance()->focused();
 
 	while(widget){
+
 		if(!event.isAccepted()){
 			widget->onKeyEventAlternative(event);
 		}

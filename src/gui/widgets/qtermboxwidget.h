@@ -5,7 +5,7 @@
 #include <QRect>
 #include "../../core/qtermboxkeyevent.h"
 #include "../../core/qtermboxresizeevent.h"
-#include "../themes/qtermboxtheme.h"
+#include "../themes/qtermboxwidgetstyle.h"
 #include "../qtermboxfocusevent.h"
 
 class QTermboxWidget : public QObject
@@ -15,18 +15,13 @@ public:
 	explicit QTermboxWidget(QObject *parent = 0);
 	bool hasFocus();
 
-	virtual QTermboxTheme* defaultTheme() = 0;
-	virtual void setDefaultTheme(QTermboxTheme* theme) = 0;
-
-	virtual QTermboxTheme* theme() const = 0;
-	virtual void setTheme(QTermboxTheme* theme) = 0;
+	virtual QTermboxWidgetStyle* theme() const = 0;
+	virtual void setTheme(QTermboxWidgetStyle* theme) = 0;
 
 	inline QRect geometry() const { return _geometry; }
 	void setGeometry(QRect geometry);
 
 protected:
-	virtual void setDefaultThemeValues(QTermboxTheme* theme);
-	const QTermboxTheme& getActiveTheme();
 
 public slots:
 	virtual void paint() = 0;

@@ -10,11 +10,8 @@ class QTermboxLabel : public QTermboxWidget
 public:
 	explicit QTermboxLabel(QObject *parent = 0);
 
-	virtual QTermboxTheme* defaultTheme();
-	virtual void setDefaultTheme(QTermboxTheme* theme);
-
-	virtual inline QTermboxTheme* theme() const { return _theme; }
-	virtual void setTheme(QTermboxTheme* theme);
+	virtual inline QTermboxWidgetStyle* theme() const { return _theme; }
+	virtual void setTheme(QTermboxWidgetStyle* theme);
 
 	inline QString text() const { return _text; }
 	void setText(QString text);
@@ -23,7 +20,7 @@ public slots:
 	virtual void paint();
 
 private:
-	QTermboxTheme* _theme;
+	QTermboxWidgetStyle* _theme;
 	QString _text;
 };
 

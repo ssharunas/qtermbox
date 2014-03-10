@@ -1,4 +1,5 @@
 #include "qtermboxfocusmanager.h"
+#include <QDebug>
 
 QTermboxFocusManager* QTermboxFocusManager::_instance = 0;
 
