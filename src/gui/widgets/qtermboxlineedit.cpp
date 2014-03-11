@@ -3,20 +3,23 @@
 #include "../../core/qtermboxcore.h"
 #include <QDebug>
 
+QTB_REGISTER_STYLE(QTermboxLineEdit, QTermboxSelectableTextWidgetStyle)
+
 QTermboxLineEdit::QTermboxLineEdit(QObject *parent) :
-	QTermboxWidget(parent), _theme(0)
+	QTermboxWidget(parent)
 {
 	QTermboxFocusManager::instance()->registerWidget(this);
 	QTermboxFocusManager::instance()->focusNext();
 }
 
-void QTermboxLineEdit::setTheme(QTermboxWidgetStyle *theme)
+QTermboxSelectableTextWidgetStyle &QTermboxLineEdit::theme()
 {
-	if(_theme != theme){
-		_theme = theme;
+	return getTheme<QTermboxSelectableTextWidgetStyle>();
+}
 
-		update(false);
-	}
+void QTermboxLineEdit::setTheme(QTermboxSelectableTextWidgetStyle *theme)
+{
+	QTermboxWidget::setTheme(theme);
 }
 
 void QTermboxLineEdit::setText(QString text)
@@ -27,10 +30,10 @@ void QTermboxLineEdit::setText(QString text)
 
 void QTermboxLineEdit::paint()
 {
-//	const QTermboxWidgetStyle& theme = getActiveTheme();
+	const QTermboxSelectableTextWidgetStyle& curTheme = theme();
 
-//	QTermboxCore::putCell(geometry().x(), geometry().y(), geometry().width(), geometry().height(), text(),
-//						  theme.foreground(), theme.background());
+	QTermboxCore::putCell(geometry().x(), geometry().y(), geometry().width(), geometry().height(), text(),
+						  curTheme.text(), curTheme.background());
 
 	qDebug() << "line: " << QPoint(geometry().x() + 1, geometry().y());
 

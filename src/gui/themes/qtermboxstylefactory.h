@@ -4,6 +4,7 @@
 #include <QObject>
 #include <QList>
 #include <QHash>
+#include <QDebug>
 #include "qtermboxwidgetstyle.h"
 
 class QTermboxStyleFactory : public QObject
@@ -16,6 +17,21 @@ public:
 	QTermboxWidgetStyle& getStyle(const QMetaObject* widgetType);
 	void installStyle(const QMetaObject* widgetType, QTermboxWidgetStyle* style);
 	void tryInstallStyle(const QMetaObject* widgetType, QTermboxWidgetStyle* style);
+
+	template<class T> T& getStyleOfType(const QMetaObject* widgetType){
+		QTermboxWidgetStyle* style = &getStyle(widgetType);
+		T* result = qobject_cast<T*>(style);
+
+		//if containing style is of invalid type, it must be replaced with  correct one
+		if(!result){
+			result = new T(this);
+			result->copy(style);
+
+			installStyle(widgetType, result);
+		}
+
+		return *result;
+	}
 
 	static QTermboxStyleFactory& instance();
 

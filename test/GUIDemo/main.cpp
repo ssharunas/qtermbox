@@ -4,6 +4,8 @@
 #include "gui/qtermboxscreen.h"
 #include "gui/widgets/qtermboxlabel.h"
 #include "gui/widgets/qtermboxlineedit.h"
+#include "gui/themes/qtermboxstylefactory.h"
+#include "gui/themes/qtermboxtextwidgetstyle.h"
 
 #include <QDebug>
 #include <QTimer>
@@ -14,6 +16,12 @@ int main(int argc, char *argv[])
 
 	QTermboxScreen *screen = QTermboxScreen::instance();
 	QTermboxLineEdit *label = new QTermboxLineEdit(screen);
+
+	QTermboxTextWidgetStyle* style = new QTermboxTextWidgetStyle();
+	style->setText(QTermboxStyle(QTermbox::Green));
+	style->setBackground(QTermboxStyle(QTermbox::Blue));
+
+	QTermboxStyleFactory::instance().installStyle(&QTermboxLabel::staticMetaObject, style);
 
 //	QTermboxWidgetStyle* theme = label->defaultTheme();
 //	theme->setBackground(QTermboxStyle(QTermbox::Green));

@@ -1,6 +1,7 @@
 #include "qtermboxstylefactory.h"
 #include "../qtermboxscreen.h"
 #include "../widgets/qtermboxwidget.h"
+#include <QDebug>
 
 QTermboxStyleFactory* QTermboxStyleFactory::_instance = 0;
 
@@ -18,11 +19,14 @@ QTermboxStyleFactory::QTermboxStyleFactory(QObject *parent) :
 
 QTermboxWidgetStyle &QTermboxStyleFactory::getStyle(const QMetaObject *widgetType)
 {
+	qDebug() << widgetType->className() << _styles.count();
+
 	if(_styleCache.contains(widgetType)){
 		return *_styleCache[widgetType];
 	}
 
 	for(int i = 0; i < _styles.count(); i++){
+
 		if(_styles[i].widgetType == widgetType){
 			_styleCache[widgetType] = _styles[i].style;
 			return *_styles[i].style;
@@ -68,8 +72,7 @@ void QTermboxStyleFactory::installStyle(const QMetaObject *widgetType, QTermboxW
 		for(int i = _styles.count() - 1; i >= 0 ; i--){
 			if(_styles[i].widgetType == widgetType){
 				if(replace){
-					_styles[i].style->deleteLater();
-					_styles.takeAt(i);
+					delete _styles.takeAt(i).style;
 				}
 
 				exists = true;

@@ -17,7 +17,9 @@ SOURCES += core/qtermboxeventpool.cpp \
     gui/widgets/qtermboxlineedit.cpp \
     gui/qtermboxfocusevent.cpp \
     gui/themes/qtermboxwidgetstyle.cpp \
-    gui/themes/qtermboxstylefactory.cpp
+    gui/themes/qtermboxstylefactory.cpp \
+    gui/themes/qtermboxtextwidgetstyle.cpp \
+    gui/themes/qtermboxselectabletextwidgetstyle.cpp
 
 HEADERS += global.h \
 	qtermbox.h \
@@ -42,4 +44,6 @@ HEADERS += global.h \
     gui/widgets/qtermboxlineedit.h \
     gui/qtermboxfocusevent.h \
     gui/themes/qtermboxwidgetstyle.h \
-    gui/themes/qtermboxstylefactory.h
+    gui/themes/qtermboxstylefactory.h \
+    gui/themes/qtermboxtextwidgetstyle.h \
+    gui/themes/qtermboxselectabletextwidgetstyle.h

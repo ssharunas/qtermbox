@@ -3,9 +3,11 @@
 
 #include <QObject>
 #include <QRect>
+#include <QDebug>
 #include "../../core/qtermboxkeyevent.h"
 #include "../../core/qtermboxresizeevent.h"
 #include "../themes/qtermboxwidgetstyle.h"
+#include "../themes/qtermboxstylefactory.h"
 #include "../qtermboxfocusevent.h"
 
 class QTermboxWidget : public QObject
@@ -15,13 +17,33 @@ public:
 	explicit QTermboxWidget(QObject *parent = 0);
 	bool hasFocus();
 
-	virtual QTermboxWidgetStyle* theme() const = 0;
-	virtual void setTheme(QTermboxWidgetStyle* theme) = 0;
+	virtual QTermboxWidgetStyle& theme();
+	virtual void setTheme(QTermboxWidgetStyle* theme);
 
 	inline QRect geometry() const { return _geometry; }
 	void setGeometry(QRect geometry);
 
 protected:
+
+	template<class T> T& getTheme(){
+		T* result;
+
+		if(_style != 0){
+			result = qobject_cast<T*>(_style);
+
+			if(!result){
+				result = new T(this);
+				result->copy(_style);
+
+				delete _style;
+				_style = result;
+			}
+		}else{
+			result = &QTermboxStyleFactory::instance().getStyleOfType<T>(metaObject());
+		}
+
+		return *result;
+	}
 
 public slots:
 	virtual void paint() = 0;
@@ -35,6 +57,7 @@ protected slots:
 
 private:
 	QRect _geometry;
+	QTermboxWidgetStyle* _style;
 
 };
 

@@ -3,25 +3,25 @@
 
 #include <QObject>
 #include "qtermboxwidget.h"
+#include "../themes/qtermboxtextwidgetstyle.h"
 
 class QTermboxLabel : public QTermboxWidget
 {
-	Q_OBJECT
-public:
-	explicit QTermboxLabel(QObject *parent = 0);
+		Q_OBJECT
+	public:
+		explicit QTermboxLabel(QObject *parent = 0);
 
-	virtual inline QTermboxWidgetStyle* theme() const { return _theme; }
-	virtual void setTheme(QTermboxWidgetStyle* theme);
+		virtual QTermboxTextWidgetStyle &theme();
+		virtual void setTheme(QTermboxTextWidgetStyle* theme);
 
-	inline QString text() const { return _text; }
-	void setText(QString text);
+		inline QString text() const { return _text; }
+		void setText(QString text);
 
-public slots:
-	virtual void paint();
+	public slots:
+		virtual void paint();
 
-private:
-	QTermboxWidgetStyle* _theme;
-	QString _text;
+	private:
+		QString _text;
 };
 
 #endif // QTERMBOXLABEL_H

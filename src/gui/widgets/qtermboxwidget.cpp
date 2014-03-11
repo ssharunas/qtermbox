@@ -1,9 +1,10 @@
 #include "qtermboxwidget.h"
 #include "../qtermboxscreen.h"
 #include "../qtermboxfocusmanager.h"
+#include <QDebug>
 
 QTermboxWidget::QTermboxWidget(QObject *parent) :
-	QObject(parent)
+	QObject(parent), _style(0)
 {
 	//QTermboxFocusManager::instance()->registerWidget(this);
 }
@@ -17,6 +18,17 @@ void QTermboxWidget::setGeometry(QRect geometry)
 bool QTermboxWidget::hasFocus()
 {
 	return QTermboxFocusManager::instance()->isFocused(this);
+}
+
+QTermboxWidgetStyle &QTermboxWidget::theme()
+{
+	return getTheme<QTermboxWidgetStyle>();
+}
+
+void QTermboxWidget::setTheme(QTermboxWidgetStyle *theme)
+{
+	_style = theme;
+	_style->setParent(this);
 }
 
 void QTermboxWidget::onKeyEvent(QTermboxKeyEvent event)
